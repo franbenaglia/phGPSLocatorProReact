@@ -1,0 +1,7 @@
+{
+  "name": "phGPSLocatorProReact",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}

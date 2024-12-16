@@ -6,7 +6,7 @@ import { Filesystem, Directory } from '@capacitor/filesystem';
 
 import { Camera, CameraResultType, CameraSource, GalleryPhotos, GalleryPhoto, Photo } from '@capacitor/camera';
 import { Capacitor } from "@capacitor/core";
-import { addPhoto, getPositions } from "../helper/StorageHelper";
+import { addPhoto, getPhotos, getPositions } from "../helper/StorageHelper";
 import { getCategories } from "../helper/CategoryHelper";
 import { Preferences } from "@capacitor/preferences";
 
@@ -17,15 +17,9 @@ export function usePhotoGallery() {
     const PHOTO_STORAGE: string = 'photos';
 
     const [photos, setPhotos] = useState<UserPhoto[]>([]);
-    const [coordinates, setCoordinates] = useState<Coordinate[]>([]);
+    //const [coordinates, setCoordinates] = useState<Coordinate[]>([]);
 
     const [coordinateCategorized, setCoordinateCategorized] = useState<CoordinateCategory[]>([]);
-
-    const getUserPhoto = (): Promise<UserPhoto> => {
-
-        return userPhoto();
-
-    }
 
     const userPhoto = async (): Promise<UserPhoto> => {
 
@@ -41,7 +35,7 @@ export function usePhotoGallery() {
 
     const savePicture = async (photo: Photo | GalleryPhoto) => {
 
-        const base64Data = await this.readAsBase64(photo);
+        const base64Data = await readAsBase64(photo);
 
         const fileName = Date.now() + '.jpeg';
         const savedFile = await Filesystem.writeFile({
@@ -80,7 +74,7 @@ export function usePhotoGallery() {
             const savedImageFile = await this.savePicture(capturedPhoto);
         */
 
-        const savedImageFile = await this.userPhoto();
+        const savedImageFile = await userPhoto();
 
         addPhoto(savedImageFile);
         /*
@@ -112,16 +106,16 @@ export function usePhotoGallery() {
 
         let photo: GalleryPhoto = capturedPhoto.photos[0];
 
-        const savedImageFile = await this.savePicture(photo);
+        const savedImageFile = await savePicture(photo);
 
         addPhoto(savedImageFile);
     }
 
     const loadSaved = () => {
 
-        this.storageService.getPhotos().subscribe(ps => {
+        getPhotos().subscribe(ps => {
 
-            this.photos = ps;
+            setPhotos(ps);
 
             /*
             if (!this.platform.is('hybrid')) {
@@ -143,13 +137,11 @@ export function usePhotoGallery() {
 
     const loadSavedCategorizedFromMarks = () => {
 
-        setCoordinateCategorized([]);
-
         getPositions().subscribe(p => {
 
-            let coord = p;
-            setCoordinates(coord.filter(c => c.photo));
+            setCoordinateCategorized(previoous => []);
 
+            const coordinates = p.filter(c => c.photo)
 
             let categories: string[] = [];
             getCategories().subscribe(cs => {
@@ -161,8 +153,11 @@ export function usePhotoGallery() {
                             category: c,
                             coordinates: coordinates.filter(co => co.category === c)
                         }
-                        coordinateCategorized.push(cCat);
-                        setCoordinateCategorized(coordinateCategorized);
+                        const exist = coordinateCategorized.find(cc => cc.category === cCat.category)
+                        if (!exist) {
+                            coordinateCategorized.push(cCat);
+                            setCoordinateCategorized(coordinateCategorized);
+                        }
                     }
                 });
             });
@@ -232,7 +227,12 @@ export function usePhotoGallery() {
         photos,
         loadSaved,
         loadSavedCategorizedFromMarks,
-        coordinateCategorized
+        coordinateCategorized,
+        checkPermissions,
+        addNewToGallery,
+        addImageToGallery,
+        userPhoto,
+        getImage
     };
 
 }

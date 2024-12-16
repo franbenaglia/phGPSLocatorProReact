@@ -16,6 +16,10 @@ export class Coordinate {
     date: Date;
     category: string;
 
+    position() {
+        return { lat: this.lat, lng: this.lng };
+    }
+
     toString(): string {
         return this.lat + ' ' + this.lng;
     }
@@ -28,8 +32,8 @@ export class Coordinate {
         return this.title + ' ' + this.description + ' ' + this.lat + ' ' + this.lng + ' ' + this.date;
     }
 
-    phototoBase64String(): string | Blob {
-        return this.photo.base64Data;
+    phototoBase64String(): string  {
+        return this.photo.base64Data as string;
     }
 
 }

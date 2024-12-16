@@ -6,15 +6,14 @@ import { deletePhoto } from '../helper/StorageHelper';
 import { IonCol, IonGrid, IonImg, IonRow, useIonActionSheet } from '@ionic/react';
 import PhotoAlbumContainer from './PhotoAlbumContainer';
 
-interface ContainerProps {
-    name: string;
-}
 
-const PhotoAlbum: React.FC<ContainerProps> = ({ name }) => {
+const PhotoAlbum: React.FC = () => {
+
+    const { loadSaved, loadSavedCategorizedFromMarks, photos, coordinateCategorized } = usePhotoGallery();
 
     useEffect(() => {
-        usePhotoGallery().loadSaved();
-        usePhotoGallery().loadSavedCategorizedFromMarks();
+        //loadSaved();
+        loadSavedCategorizedFromMarks();
     }, []);
 
     const [present] = useIonActionSheet();
@@ -47,7 +46,7 @@ const PhotoAlbum: React.FC<ContainerProps> = ({ name }) => {
                 <IonRow>
                     Photos from camera
                 </IonRow>
-                {usePhotoGallery().photos && usePhotoGallery().photos.map((photo, position) => {
+                {photos && photos.map((photo, position) => {
                     return (
                         <IonRow>
                             <IonCol size="4">
@@ -63,18 +62,18 @@ const PhotoAlbum: React.FC<ContainerProps> = ({ name }) => {
 
             {
 
-                usePhotoGallery().coordinateCategorized && usePhotoGallery().coordinateCategorized.map(cc => {
+                coordinateCategorized && coordinateCategorized.map(cc => {
                     return (
                         <IonGrid>
                             <IonRow>
                                 {cc.category}
                             </IonRow>
                             <IonRow>
-                                {cc.coordinates && cc.coordinates.map(c => {
+                                {cc && cc.coordinates && cc.coordinates.map(c => {
 
                                     return (
                                         <IonCol size="4">
-                                            <PhotoAlbumContainer {...c as any} />
+                                            <PhotoAlbumContainer coordinate={c} />
                                         </IonCol>
                                     )
 

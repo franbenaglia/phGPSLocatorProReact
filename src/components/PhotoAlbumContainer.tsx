@@ -9,11 +9,9 @@ interface ContainerProps {
 
 const PhotoAlbumContainer: React.FC<ContainerProps> = ({ coordinate }) => {
 
-
-
     return (
         <div>
-            <p>Lat: {coordinate.lat} Ln: {coordinate.lng} Date: {coordinate.date.toISOString()}</p>
+            <p>Lat: {coordinate.lat.toFixed(2)} Ln: {coordinate.lng.toFixed(2)} Date: {coordinate.date.toUTCString()}</p>
             <img src={coordinate.photo.base64Data as string} />
 
         </div >

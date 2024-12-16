@@ -12,7 +12,7 @@ import {
     addPhoto as addPhotoSqlLite
 } from './SqlLiteHelper';
 import {
-    openDb, getPositions as getPositionsIndexedDb,
+    getPositions as getPositionsIndexedDb,
     getPhotos as getPhothosIndexedDb, addNewPosition as addNewPositionIndexedDb,
     updatePosition as updatePositionIndexedDb,
     deletePosition as deletePositionIndexedDb,
@@ -26,7 +26,7 @@ export const init = async () => {
     if (Capacitor.isNativePlatform()) {
         await initDatabase();
     } else {
-        await openDb();
+        //await openDb();
     }
 }
 
@@ -51,7 +51,7 @@ export const getPhotos = (): Observable<UserPhoto[]> => {
     }
 }
 
-export const ddNewPosition = async (c: Coordinate) => {
+export const addNewPosition = async (c: Coordinate) => {
     if (!isNative()) {
         return await addNewPositionIndexedDb(c);
     } else {

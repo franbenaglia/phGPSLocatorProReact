@@ -5,13 +5,9 @@ import { Coordinate } from '../model/coordinate';
 import { addCategory, categoryExist } from '../helper/CategoryHelper';
 import { useEffect, useState } from 'react';
 
-interface ContainerProps {
-    coordinate: Coordinate;
-}
+const Configuration: React.FC = ({ }) => {
 
-const Configuration: React.FC<ContainerProps> = ({ }) => {
-
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState('' as any);
 
     const [isToastOpen, setIsToastOpen] = useState(false);
 
@@ -21,9 +17,9 @@ const Configuration: React.FC<ContainerProps> = ({ }) => {
 
     const categoryHandler = () => {
         if (category) {
-            categoryExist(category).subscribe(e => {
+            categoryExist(category.value).subscribe(e => {
                 if (!e) {
-                    addCategory(category);
+                    addCategory(category.value);
                     setOpen(true);
                 } else {
                     setOpen(false)

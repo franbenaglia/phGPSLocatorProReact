@@ -38,6 +38,7 @@ import './theme/variables.css';
 import MapPage from './pages/MapPage';
 import { MapProvider } from './contexts/MapContext';
 import PhotoAlbumPage from './pages/PhotoAlbumPage';
+import ConfigurationPage from './pages/ConfigurationPage';
 
 setupIonicReact();
 
@@ -51,6 +52,9 @@ const App: React.FC = () => {
             <IonRouterOutlet id="main">
               <Route path="/Map" exact={true}>
                 <MapPage />
+              </Route>
+              <Route path="/Configuration" exact={true}>
+                <ConfigurationPage />
               </Route>
               <Route path="/PhotoAlbum" exact={true}>
                 <PhotoAlbumPage />

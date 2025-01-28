@@ -13,6 +13,8 @@ import {
 import { useLocation } from 'react-router-dom';
 import { archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp } from 'ionicons/icons';
 import './Menu.css';
+import { useEffect } from 'react';
+import { init } from '../helper/CategoryHelper';
 
 interface AppPage {
   url: string;
@@ -25,6 +27,12 @@ const appPages: AppPage[] = [
   {
     title: 'Inbox',
     url: '/folder/Inbox',
+    iosIcon: mailOutline,
+    mdIcon: mailSharp
+  },
+  {
+    title: 'Configuration',
+    url: '/Configuration',
     iosIcon: mailOutline,
     mdIcon: mailSharp
   },
@@ -43,9 +51,12 @@ const appPages: AppPage[] = [
 
 ];
 
-const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-
 const Menu: React.FC = () => {
+
+  useEffect(() => {
+    init();
+  }, []);
+
   const location = useLocation();
 
   return (

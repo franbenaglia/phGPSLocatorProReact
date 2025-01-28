@@ -151,11 +151,15 @@ const MarkerContent: React.FC<ContainerProps> = ({ coordinate }) => {
 
               <IonRow>
                 <IonSelect aria-label="Category" value={category} onIonChange={(e) => onChange(e.detail.value)}>
-                  {categories && categories.map((c, index) => {
+                  <IonSelectOption>General</IonSelectOption>
+                  <IonSelectOption>Building</IonSelectOption>
+                  <IonSelectOption>Street</IonSelectOption>
+                  {categories && categories.length > 0 && categories.map((c, index) => {
                     return (<IonSelectOption>{c}</IonSelectOption>)
                   })}
                 </IonSelect>
               </IonRow>
+
 
               <IonRow>
                 <IonButton type="submit" shape="round" size="small">Accept</IonButton>

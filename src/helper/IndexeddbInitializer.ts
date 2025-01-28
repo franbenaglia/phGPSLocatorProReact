@@ -6,7 +6,7 @@ const storeNames = ['coordinates', 'photos'];
 
 export const openDb = async () => {
 
-    let index: IDBIndex[];
+    let index: IDBIndex[] = {} as any;
 
     const dabOpen: IDBPDatabase = await openDB(dbname, version, {
 

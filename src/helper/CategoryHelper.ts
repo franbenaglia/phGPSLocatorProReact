@@ -6,7 +6,7 @@ const CATEGORY: string = 'categories';
 
 export const init = () => {
 
-    let categories = ['General', 'Building', 'Street', 'People'];
+    const categories = ['General', 'Building', 'Street', 'People'];
 
     getCategories().subscribe(c => {
         if (!c.value) {

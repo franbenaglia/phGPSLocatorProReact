@@ -4,18 +4,29 @@ import { closeCircle } from 'ionicons/icons';
 import { useContext } from 'react';
 import { MapContext } from '../contexts/MapContext';
 import { UserPhoto } from '../model/userPhoto';
+import { Capacitor } from '@capacitor/core';
 
 interface ContainerProps {
     photo: UserPhoto;
 }
 
-const PhotoContent: React.FC<ContainerProps> = ({ photo }) => { //image= coordinate.photo.base64Data
+const PhotoContent: React.FC<ContainerProps> = ({ photo }) => {
 
     const { setOpenPhotoContent } = useContext(MapContext);
 
     const close = () => {
         setOpenPhotoContent(false);
     }
+
+    const photosrc = () => {
+        if (!Capacitor.isNativePlatform()) {
+            return photo.base64Data;
+        } else {
+            return Capacitor.convertFileSrc(photo.filepath);
+        }
+    }
+
+
 
     return (
         <div>
@@ -25,7 +36,7 @@ const PhotoContent: React.FC<ContainerProps> = ({ photo }) => { //image= coordin
                     <IonIcon icon={closeCircle} size="large" onClick={() => close()}></IonIcon>
                 </IonCardHeader>
                 <IonCardContent>
-                    <img src={photo.base64Data as string} />
+                    <img src={photosrc() as string} />
                 </IonCardContent>
             </IonCard>
 

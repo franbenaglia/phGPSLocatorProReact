@@ -2,18 +2,26 @@ import { useEffect } from 'react';
 import './PhotoAlbum.css';
 import { usePhotoGallery } from "../hooks/userPhotoGallery";
 import { UserPhoto } from '../model/userPhoto';
-import { deletePhoto } from '../helper/StorageHelper';
+import { deletePhoto, initSqlLite } from '../helper/StorageHelper';
 import { IonCol, IonGrid, IonImg, IonRow, useIonActionSheet } from '@ionic/react';
 import PhotoAlbumContainer from './PhotoAlbumContainer';
+import { Capacitor } from '@capacitor/core';
 
 
 const PhotoAlbum: React.FC = () => {
 
     const { loadSaved, loadSavedCategorizedFromMarks, photos, coordinateCategorized } = usePhotoGallery();
 
-    useEffect(() => {
+    const init = async () => {
+        //if (Capacitor.isNativePlatform()) {
+        //    await initSqlLite();
+        //}
         //loadSaved();
         loadSavedCategorizedFromMarks();
+    }
+
+    useEffect(() => {
+        init();
     }, []);
 
     const [present] = useIonActionSheet();

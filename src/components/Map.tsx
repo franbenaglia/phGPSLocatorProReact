@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import './Map.css';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 //import './leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvent, useMapEvents } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
@@ -7,9 +9,11 @@ import { Coordinate } from '../model/coordinate';
 import { IonContent, IonPopover } from '@ionic/react';
 import { MapContext, MapProvider } from '../contexts/MapContext';
 import MarkerContent from './MarkerContent';
-import { getPositions } from '../helper/StorageHelper';
+import { getPositions, initSqlLite } from '../helper/StorageHelper';
 import PhotoContent from './PhotoContent';
 import { getCurrentPosition } from '../helper/GeolocHelper';
+import { Capacitor } from '@capacitor/core';
+import L from 'leaflet';
 
 
 const Map: React.FC = () => {
@@ -17,16 +21,31 @@ const Map: React.FC = () => {
     const [position, setPosition] = useState(null);
     const { isPopoverOpen, coordinate, coordinates, setCoordinates, openPhotoContent } = useContext(MapContext);
 
+    let DefaultIcon = L.icon({
+        iconUrl: icon,
+        shadowUrl: iconShadow
+    });
+
+    L.Marker.prototype.options.icon = DefaultIcon;
+
+    const init = async () => {
+        //if (Capacitor.isNativePlatform()) {
+        //    await initSqlLite();
+        //}
+        cposition();
+        fetchCoordinates();
+    }
+
     const fetchCoordinates = async () => {
         getPositions().subscribe(cs => {
+            console.log('SEEEEEEEEEETTTTTTTTTTEEEEEEEEANDO COOOOOORDS ' + cs);
             setCoordinates(cs)
         }
         );
     }
 
     useEffect(() => {
-        cposition();
-        fetchCoordinates();
+        init();
     }, []);
 
     const cposition = (): void => {

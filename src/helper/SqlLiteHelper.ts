@@ -9,7 +9,7 @@ import { UserPhoto } from '../model/userPhoto';
 
 
 let isIOS: boolean;
-let dbName: string;
+//let dbName: string;
 
 export const initDatabase = async () => {
 
@@ -18,7 +18,7 @@ export const initDatabase = async () => {
     if (!dbSetup.value) {
         setUpDatabase();
     } else {
-        dbName = await getDbName();
+        const dbName = await getDbName();
         await CapacitorSQLite.createConnection({ database: dbName });
         await CapacitorSQLite.open({ database: dbName })
     }
@@ -34,7 +34,7 @@ export const setUpDatabase = async () => {
 
     if (isValid.result) {
 
-        dbName = json.database;
+        const dbName = json.database;
 
         await CapacitorSQLite.importFromJson({ jsonstring });
 
@@ -49,19 +49,15 @@ export const setUpDatabase = async () => {
 }
 
 export const getDbName = async () => {
-
-    if (!dbName) {
-        const dbname = await Preferences.get({ key: 'dbname' })
-        if (dbname.value) {
-            dbName = dbname.value
-        }
-    }
-    return dbName;
+    const dbname = await Preferences.get({ key: 'dbname' })
+    return dbname.value;
 }
 
 export const create = async (element: any, table: string): Promise<capSQLiteChanges> => {
 
-    let sql = 'INSERT INTO ' + table + ' VALUES(?)';
+    const idserial = Math.floor(Math.random() * 99999999);
+
+    let sql = 'INSERT INTO ' + table + ' VALUES(?,?)';
 
     const dbName = await getDbName();
 
@@ -73,6 +69,7 @@ export const create = async (element: any, table: string): Promise<capSQLiteChan
             {
                 statement: sql,
                 values: [
+                    idserial,
                     jsonstring
                 ]
             }
@@ -81,6 +78,8 @@ export const create = async (element: any, table: string): Promise<capSQLiteChan
 }
 
 export const read = async (table: string) => {
+
+    console.log('REEEEEEEEEEEEAAAAAAAAAAAAAADDDDDDDDDDDDDD1');
 
     let sql = 'SELECT * FROM ' + table;
 
@@ -92,12 +91,21 @@ export const read = async (table: string) => {
         values: []
     }).then((response: capSQLiteValues) => {
 
+        console.log('REEEEEEEEEEEEAAAAAAAAAAAAAADDDDDDDDDDDDDD222222');
+
         let elements: any[] = [];
 
         for (let index = 0; index < response.values.length; index++) {
             const element = response.values[index];
-            elements.push(element);
+            console.log(element.coordinates);
+            console.log(element.id);
+            if (table === 'coordinates') {
+                elements.push(JSON.parse(element.coordinates));
+            } else {
+                elements.push({ photos: JSON.parse(element.photos), id: element.id });
+            }
         }
+        console.log('QWERTYYYYYYYYYYYYYYY ' + elements);
         return elements;
 
     }).catch(err => Promise.reject(err))

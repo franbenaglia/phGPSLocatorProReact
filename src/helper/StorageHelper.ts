@@ -21,13 +21,8 @@ import {
 } from './Indexeddbhelper';
 
 
-export const init = async () => {
-
-    if (Capacitor.isNativePlatform()) {
+export const initSqlLite = async () => {
         await initDatabase();
-    } else {
-        //await openDb();
-    }
 }
 
 export const isNative = (): boolean => {

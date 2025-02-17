@@ -39,10 +39,24 @@ import MapPage from './pages/MapPage';
 import { MapProvider } from './contexts/MapContext';
 import PhotoAlbumPage from './pages/PhotoAlbumPage';
 import ConfigurationPage from './pages/ConfigurationPage';
+import { useEffect } from 'react';
+import { initSqlLite } from './helper/StorageHelper';
+import { Capacitor } from '@capacitor/core';
 
 setupIonicReact();
 
 const App: React.FC = () => {
+
+  const init = async () => {
+    if (Capacitor.isNativePlatform()) {
+      await initSqlLite();
+    }
+  }
+
+  useEffect(() => {
+    init();
+  }, []);
+
   return (
     <IonApp>
       <MapProvider>
